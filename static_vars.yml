@@ -1,0 +1,450 @@
+{
+
+  #
+  # Flag to create or delete all the objects
+  # Accepts: 'present' to create; 'absent' to delete
+  #
+  "state": "present",
+  "mtu": "1700",
+  #
+  "validate_certs": False,
+  #
+  #
+  #
+  #
+  # First NSX appliance node. Defined separate based on the consumption.
+  # Accepts both IP (IPv4) and FQDN for 'mgmt_ip'
+  #
+  "nsx_node1": {
+    "hostname": "{{management_network.nsx_manager_ip}}",
+    "mgmt_ip": "{{management_network.nsx_manager_ip}}",
+  },
+
+  "compute_managers": [
+    {
+      "display_name": "{{vcenter.fqdn}}",
+      "mgmt_ip": "{{vcenter.ip}}",
+      "origin_type": "vCenter",
+      "credential_type": "UsernamePasswordLoginCredential",
+      "username": "{{vcenter.username}}",
+      "password": "{{vcenter.password}}",
+    }
+  ],
+
+
+  "transport_zones": [
+    {
+      "display_name": "overlay-tz",
+      "description": "NSX Overlay Transport Zone",
+      "transport_type": "OVERLAY",
+      "uplink_teaming_policy_names": []
+    },
+    {
+      "display_name": "host-vlan-tz",
+      "description": "NSX VLAN Transport Zone for ESX Servers",
+      "transport_type": "VLAN",
+      "uplink_teaming_policy_names": [  "uplink-left-active-uplink-right-standby" , "uplink-right-active-uplink-left-standby" ],
+      "host_switch_name": "host-switch"
+    }
+    ,
+    {
+      "display_name": "edge-vlan-tz",
+      "description": "NSX VLAN Transport Zone for Edge Nodes",
+      "transport_type": "VLAN",
+      "uplink_teaming_policy_names": [  "uplink-left" , "uplink-right" ],
+      "host_switch_name": "host-switch"
+    }
+  ],
+
+  "segments": [
+    { "display_name": "edge-uplink-left",
+      "transport_zone_name": "host-vlan-tz",
+      "uplink_teaming_policy_name" : "uplink-left-active-uplink-right-standby",
+      "vlan_ids": "{{edge_uplink_left_vlan_id}},{{overlay_vlan_id}},{{management_vlan_id}}"
+    },
+    { "display_name": "edge-uplink-right",
+      "transport_zone_name": "host-vlan-tz",
+      "uplink_teaming_policy_name" : "uplink-right-active-uplink-left-standby",
+      "vlan_ids": "{{edge_uplink_right_vlan_id}},{{overlay_vlan_id}},{{management_vlan_id}}"
+    }
+  ],
+
+
+  "edge_segments": [
+    { "display_name": "vlan-300",
+      "transport_zone_name": "edge-vlan-tz",
+      "uplink_teaming_policy_name" : "uplink-left",
+      "vlan_ids": "{{edge_uplink_left_vlan_id}}"
+    },
+    { "display_name": "vlan-400",
+      "transport_zone_name": "edge-vlan-tz",
+      "uplink_teaming_policy_name" : "uplink-right",
+      "vlan_ids": "{{edge_uplink_right_vlan_id}}"
+    }
+  ],
+
+  "ip_pools": [
+    {
+      "display_name": "tep-ip-pool",
+      "subnets": [
+        {
+          "id": "tep_subnet",
+          "state": "{{state}}",
+          "allocation_ranges": [
+            {
+              "start": "{{tep_range.start}}",
+              "end": "{{tep_range.end}}"
+            }
+          ],
+          "cidr": "{{tep_range.cidr}}",
+          "gateway_ip": "{{tep_range.gateway_ip}}",
+          "dns_nameservers": "{{tep_range.dns_nameservers}}"
+        }
+      ]
+    }
+  ],
+
+  "edge_uplink_profiles": [
+    {
+      "display_name": "edge-loadbalance-uplink-profile",
+      "teaming": {
+        "active_list": [
+          {
+            "uplink_name": "uplink-1",
+            "uplink_type": "PNIC"
+          },
+          {
+            "uplink_name": "uplink-2",
+            "uplink_type": "PNIC"
+          }
+        ],
+        "policy": "LOADBALANCE_SRCID"
+      },
+      "named_teamings" : [
+        {
+          "name": "uplink-left",
+          "active_list": [
+            {
+              "uplink_name": "uplink-1",
+              "uplink_type": "PNIC"
+            }
+          ],
+          "policy": "FAILOVER_ORDER"
+        },
+        {
+          "name": "uplink-right",
+          "active_list": [
+            {
+              "uplink_name": "uplink-2",
+              "uplink_type": "PNIC"
+            }
+          ],
+          "policy": "FAILOVER_ORDER"
+        }
+      ],
+      "transport_vlan": "{{overlay_vlan_id}}",
+      "mtu": "{{mtu}}"
+    }
+  ],
+
+  "host_uplink_profiles": [
+    {
+      "display_name": "host-loadbalance-uplink-profile",
+      "teaming": {
+        "active_list": [
+          {
+            "uplink_name": "uplink-1",
+            "uplink_type": "PNIC"
+          },
+          {
+            "uplink_name": "uplink-2",
+            "uplink_type": "PNIC"
+          }
+        ],
+        "policy": "LOADBALANCE_SRCID"
+      },
+      "named_teamings" : [
+        {
+          "name": "uplink-left-active-uplink-right-standby",
+          "active_list": [
+            {
+              "uplink_name": "uplink-1",
+              "uplink_type": "PNIC"
+            }
+          ],
+          "standby_list": [
+            {
+              "uplink_name": "uplink-2",
+              "uplink_type": "PNIC"
+            }
+          ],
+          "policy": "FAILOVER_ORDER"
+        },
+        {
+          "name": "uplink-right-active-uplink-left-standby",
+          "active_list": [
+            {
+              "uplink_name": "uplink-2",
+              "uplink_type": "PNIC"
+            }
+          ],
+          "standby_list": [
+            {
+              "uplink_name": "uplink-1",
+              "uplink_type": "PNIC"
+            }
+          ],
+          "policy": "FAILOVER_ORDER"
+        }
+      ],
+      "transport_vlan": "{{overlay_vlan_id}}",
+    }
+  ],
+
+  "transport_node_profiles": [
+    {
+      "display_name": "standard-tn-profile",
+      "description": "Compute Transport Node Profile",
+      "host_switches": [
+        {
+          "host_switch_profiles": [
+            {
+              "name": "host-loadbalance-uplink-profile",
+              "type": "UplinkHostSwitchProfile"
+            }
+          ],
+          "host_switch_name": "{{vcenter.vds}}",
+          "host_switch_mode": "STANDARD",
+          "host_switch_type": "VDS",
+          "uplinks": [
+            {
+              "uplink_name": "uplink-1",
+              "vds_uplink_name": "Uplink 1"
+            },
+            {
+              "uplink_name": "uplink-2",
+              "vds_uplink_name": "Uplink 2"
+            }
+          ],
+          "ip_assignment_spec":
+            {
+              "resource_type": "StaticIpPoolSpec",
+              "ip_pool_name": "tep-ip-pool"
+            },
+          "transport_zone_endpoints": [
+            {
+              "transport_zone_name": "overlay-tz"
+            },
+            {
+              "transport_zone_name": "host-vlan-tz"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "transport_nodes": [
+    {
+      "display_name": "edge-01b",
+      "description": "NSX Edge Node 01",
+      "host_switches": [
+        {
+          "host_switch_profiles": [
+            {
+              "name": "edge-loadbalance-uplink-profile",
+              "type": "UplinkHostSwitchProfile"
+            }
+          ],
+          "host_switch_name": "edge-nvds",
+          "host_switch_mode": "STANDARD",
+          "pnics": [
+            {
+              "device_name": "fp-eth0",
+              "uplink_name": "uplink-1"
+            },
+            {
+              "device_name": "fp-eth1",
+              "uplink_name": "uplink-2"
+            }
+          ],
+          "ip_assignment_spec":
+            {
+              "resource_type": "StaticIpPoolSpec",
+              "ip_pool_name": "tep-ip-pool"
+            },
+          "transport_zone_endpoints": [
+            {
+              "transport_zone_name": "overlay-tz"
+            },
+            {
+              "transport_zone_name": "edge-vlan-tz"
+            }
+          ],
+      }],
+      "node_deployment_info": {
+        "deployment_config": {
+          "vm_deployment_config": {
+            "vc_name": "{{vcenter.fqdn}}",
+            "vc_username": "{{vcenter.username}}",
+            "vc_password": "{{vcenter.password}}",
+            "compute": "{{vcenter.cluster}}",
+            "reservation_info": {
+              "memory_reservation": {
+                "reservation_percentage": 0
+              },
+              "cpu_reservation": {
+                "reservation_in_shares": "HIGH_PRIORITY",
+                "reservation_in_mhz": 0
+              }
+            },
+            "resource_allocation": {
+              "cpu_count": 4,
+              "memory_allocation_in_mb": 8192
+            },
+            "storage": "{{edge_nodes.edge1_datastore}}",
+            "host": "{{edge_nodes.edge1_host}}",
+            "management_network": "{{management_network.portgroup_name}}",
+            "data_networks": [
+              "edge-uplink-left",
+              "edge-uplink-right"
+            ],
+            "management_port_subnets": [
+              {
+                "ip_addresses": [ "{{management_network.edge01_ip}}" ],
+                "prefix_length": "{{management_network.prefix_length}}"
+              }
+            ],
+            "default_gateway_addresses": [ "{{management_network.gateway_ip}}" ],
+            "placement_type": "VsphereDeploymentConfig",
+          },
+          "form_factor": "{{edge_nodes.size}}",
+          "node_user_settings": {
+            "cli_username": "admin" ,
+            "root_password": "{{edge_nodes.password}}",
+            "cli_password": "{{edge_nodes.password}}",
+            "audit_username": "audit",
+            "audit_password": "{{edge_nodes.password}}"
+          }
+        },
+        "resource_type": "EdgeNode",
+        "display_name": "edge-01b",
+        "node_settings": {
+          "allow_ssh_root_login": "True",
+          "enable_ssh": "True",
+          "hostname": "edge-01b",
+          "dns_servers": "{{edge_nodes.dns_servers}}"
+        }
+      }
+    },
+    {
+      "display_name": "edge-02b",
+      "description": "NSX Edge Node 02",
+      "host_switches": [
+        {
+          "host_switch_profiles": [
+            {
+              "name": "edge-loadbalance-uplink-profile",
+              "type": "UplinkHostSwitchProfile"
+            }
+          ],
+          "host_switch_name": "edge-nvds",
+          "host_switch_mode": "STANDARD",
+          "pnics": [
+            {
+              "device_name": "fp-eth0",
+              "uplink_name": "uplink-1"
+            },
+            {
+              "device_name": "fp-eth1",
+              "uplink_name": "uplink-2"
+            }
+          ],
+          "ip_assignment_spec":
+            {
+              "resource_type": "StaticIpPoolSpec",
+              "ip_pool_name": "tep-ip-pool"
+            },
+          "transport_zone_endpoints": [
+            {
+              "transport_zone_name": "overlay-tz"
+            },
+            {
+              "transport_zone_name": "edge-vlan-tz"
+            }
+          ],
+      }],
+      "node_deployment_info": {
+        "deployment_config": {
+          "vm_deployment_config": {
+            "vc_name": "{{vcenter.fqdn}}",
+            "vc_username": "{{vcenter.username}}",
+            "vc_password": "{{vcenter.password}}",
+            "compute": "{{vcenter.cluster}}",
+            "reservation_info": {
+              "memory_reservation": {
+                "reservation_percentage": 0
+              },
+              "cpu_reservation": {
+                "reservation_in_shares": "HIGH_PRIORITY",
+                "reservation_in_mhz": 0
+              }
+            },
+            "resource_allocation": {
+              "cpu_count": 4,
+              "memory_allocation_in_mb": 8192
+            },
+            "storage": "{{edge_nodes.edge2_datastore}}",
+            "host": "{{edge_nodes.edge2_host}}",
+            "management_network": "{{management_network.portgroup_name}}",
+            "data_networks": [
+              "edge-uplink-left",
+              "edge-uplink-right"
+            ],
+            "management_port_subnets": [
+              {
+                "ip_addresses": [ "{{management_network.edge02_ip}}" ],
+                "prefix_length": "{{management_network.prefix_length}}"
+              }
+            ],
+            "default_gateway_addresses": [ "{{management_network.gateway_ip}}" ],
+            "placement_type": "VsphereDeploymentConfig",
+          },
+          "form_factor": "{{edge_nodes.size}}",
+          "node_user_settings": {
+            "cli_username": "admin" ,
+            "root_password": "{{edge_nodes.password}}",
+            "cli_password": "{{edge_nodes.password}}",
+            "audit_username": "audit",
+            "audit_password": "{{edge_nodes.password}}"
+          }
+        },
+         "resource_type": "EdgeNode",
+         "display_name": "edge-02b",
+           "node_settings": {
+           "allow_ssh_root_login": "True",
+           "enable_ssh": "True",
+           "hostname": "edge-02b",
+           "dns_servers": "{{edge_nodes.dns_servers}}"
+         }
+    }
+  }
+
+
+  ],
+
+  "edge_clusters": [
+    {
+      "display_name": "edge-cluster-01",
+      "cluster_profile_binding_id": "91bcaa06-47a1-11e4-8316-17ffc770799b",
+      "members": [
+        {
+          "transport_node_name": "edge-01b"
+        },
+        {
+          "transport_node_name": "edge-02b"
+        }
+      ]
+    },
+  ]
+}
