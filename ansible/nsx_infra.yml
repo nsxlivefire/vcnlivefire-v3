@@ -166,23 +166,6 @@
       with_items:
         - "{{ edge_clusters }}"
 
-    - name: Create Edge VLAN Segmets
-      vmware.ansible_for_nsxt.nsxt_policy_segment:
-        hostname: "{{ nsx_node1.mgmt_ip }}"
-        username: "{{ nsx.username }}"
-        password: "{{ nsx.password }}"
-        validate_certs: "{{ validate_certs }}"
-        display_name: "{{ item.display_name }}"
-        replication_mode: SOURCE
-        admin_state: UP
-        transport_zone_display_name: "{{ item.transport_zone_name }}"
-        advanced_config:
-          uplink_teaming_policy_name: "{{ item.uplink_teaming_policy_name }}"
-        vlan_ids: "{{ item.vlan_ids }}"
-        state: "{{ state }}"
-      with_items:
-        - "{{ edge_segments }}"
-
     - name: Pause for 5 minutes so that the edge cluster enforcement point is available (!!!DO NOT SKIP!!!)
       pause:
         minutes: 5

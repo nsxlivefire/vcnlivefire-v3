@@ -51,7 +51,7 @@ management_network:
 
 #Provide Edge Node VMs deployment information
 edge_nodes:
-  size: MEDIUM #set to LARGE for TLS decryption and Gateway IDPS, and to XLARGE for Gateway Malware Detection
+  size: SMALL #set to LARGE for TLS decryption and Gateway IDPS, and to XLARGE for Gateway Malware Detection
   edge1_datastore: esx-02b-local
   edge1_host: esx-02b.corp.local
   edge2_datastore: esx-03b-local
