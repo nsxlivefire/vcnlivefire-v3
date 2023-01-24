@@ -20,6 +20,7 @@ With this Ansible script we automate the following on the NSX Infrastructure sid
 - Attach Transport node profile to collapsed cluster
     - Attach Transport node profile to collapsed cluster (Cluster-02) in Site-B
 - Create VLAN Segments
+    - In Ansible you create the VLAN Segments (trunks) to be used for the Edge transport Nodes
     - create an VLAN segment for BGP Uplink #1
     - create an VLAN segment for BGP Uplink #2
 - Create Edge Transport Nodes
@@ -32,6 +33,7 @@ With this Ansible script we automate the following on the NSX Infrastructure sid
 With this Terraform script we automate the following on the virtual NSX (underlay) network topology:
 
 - Create VLAN Segments for Site B North/South Routing
+    - In Terraform you create the VLAN Segments to be used for the Tier-0 Gateway
     - create an VLAN segment for BGP Uplink #1
     - create an VLAN segment for BGP Uplink #2
 - Create Site-B Tier-0 Gateway
