@@ -22,7 +22,7 @@
 
   "compute_managers": [
     {
-      "display_name": "{{vcenter.fqdn}}",
+      "display_name": "{{vcenter.name}}",
       "mgmt_ip": "{{vcenter.ip}}",
       "origin_type": "vCenter",
       "credential_type": "UsernamePasswordLoginCredential",
@@ -285,7 +285,7 @@
       "node_deployment_info": {
         "deployment_config": {
           "vm_deployment_config": {
-            "vc_name": "{{vcenter.fqdn}}",
+            "vc_name": "{{vcenter.name}}",
             "vc_username": "{{vcenter.username}}",
             "vc_password": "{{vcenter.password}}",
             "compute": "{{vcenter.cluster}}",
@@ -377,7 +377,7 @@
       "node_deployment_info": {
         "deployment_config": {
           "vm_deployment_config": {
-            "vc_name": "{{vcenter.fqdn}}",
+            "vc_name": "{{vcenter.name}}",
             "vc_username": "{{vcenter.username}}",
             "vc_password": "{{vcenter.password}}",
             "compute": "{{vcenter.cluster}}",

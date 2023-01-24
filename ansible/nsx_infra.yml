@@ -6,22 +6,22 @@
     - static_vars.yml
     - user_defined_vars.yml
   tasks:
-    - name: Register compute manager
-      vmware.ansible_for_nsxt.nsxt_fabric_compute_managers:
-          hostname: "{{ nsx_node1.hostname }}"
-          username: "{{ nsx.username }}"
-          password: "{{ nsx.password }}"
-          validate_certs: "{{ validate_certs }}"
-          display_name: "{{ item.display_name }}"
-          server: "{{ item.display_name }}"
-          origin_type: "{{ item.origin_type }}"
-          credential:
-            credential_type: "{{ item.credential_type }}"
-            username: "{{ item.username }}"
-            password: "{{ item.password }}"
-          state: present
-      with_items:
-        - "{{compute_managers}}"
+#    - name: Register compute manager - we don't run this task because the Compute Manager is registered already
+#      vmware.ansible_for_nsxt.nsxt_fabric_compute_managers:
+#         hostname: "{{ nsx_node1.hostname }}"
+#          username: "{{ nsx.username }}"
+#          password: "{{ nsx.password }}"
+#          validate_certs: "{{ validate_certs }}"
+#          display_name: "{{ item.display_name }}"
+#          server: "{{ item.display_name }}"
+#          origin_type: "{{ item.origin_type }}"
+#          credential:
+#            credential_type: "{{ item.credential_type }}"
+#            username: "{{ item.username }}"
+#            password: "{{ item.password }}"
+#          state: present
+#      with_items:
+#        - "{{compute_managers}}"
 
     - name: Create IP Pools
       vmware.ansible_for_nsxt.nsxt_policy_ip_pool:
@@ -165,7 +165,3 @@
         state: "{{ state }}"
       with_items:
         - "{{ edge_clusters }}"
-
-    - name: Pause for 5 minutes so that the edge cluster enforcement point is available (!!!DO NOT SKIP!!!)
-      pause:
-        minutes: 5

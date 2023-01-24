@@ -1,5 +1,6 @@
 #This section cover the existing vCenter deployment.
 vcenter:
+  name: vcsa-01b
   fqdn: vcsa-01b.corp.local
   ip: 192.168.210.22
   username: administrator@vsphere.local
