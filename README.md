@@ -21,8 +21,7 @@ With this Ansible script we automate the following on the NSX Infrastructure sid
     - Attach Transport node profile to collapsed cluster (Cluster-02) in Site-B
 - Create VLAN Segments
     - In Ansible you create the VLAN Segments (trunks) to be used for the Edge transport Nodes
-    - create an VLAN segment for BGP Uplink #1
-    - create an VLAN segment for BGP Uplink #2
+    - create an two VLAN segments for with different primary uplinks
 - Create Edge Transport Nodes
     - Deploy two edge(s) (transport nodes) with the correct settings
 - Create Edge (Transport Nodes) Cluster
