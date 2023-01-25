@@ -60,26 +60,12 @@
     { "display_name": "edge-uplink-left",
       "transport_zone_name": "host-vlan-tz",
       "uplink_teaming_policy_name" : "uplink-left-active-uplink-right-standby",
-      "vlan_ids": "{{edge_uplink_left_vlan_id}},{{overlay_vlan_id}},{{management_vlan_id}}"
+      "vlan_ids": "{{edge_uplink_left_vlan_id}},{{overlay_vlan_id}}"
     },
     { "display_name": "edge-uplink-right",
       "transport_zone_name": "host-vlan-tz",
       "uplink_teaming_policy_name" : "uplink-right-active-uplink-left-standby",
-      "vlan_ids": "{{edge_uplink_right_vlan_id}},{{overlay_vlan_id}},{{management_vlan_id}}"
-    }
-  ],
-
-
-  "edge_segments": [
-    { "display_name": "vlan-300",
-      "transport_zone_name": "edge-vlan-tz",
-      "uplink_teaming_policy_name" : "uplink-left",
-      "vlan_ids": "{{edge_uplink_left_vlan_id}}"
-    },
-    { "display_name": "vlan-400",
-      "transport_zone_name": "edge-vlan-tz",
-      "uplink_teaming_policy_name" : "uplink-right",
-      "vlan_ids": "{{edge_uplink_right_vlan_id}}"
+      "vlan_ids": "{{edge_uplink_right_vlan_id}},{{overlay_vlan_id}}"
     }
   ],
 

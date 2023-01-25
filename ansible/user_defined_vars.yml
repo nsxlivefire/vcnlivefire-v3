@@ -7,7 +7,7 @@ vcenter:
   password: VMware1!
   cluster: Cluster-02
   #  cluster: "Cluster-02/Resources/nsx"
-  vds: Site-B-vDS-02
+  vds: Site-B-vDS-01
 
 #The NSX Manager appliace must be deployed from OVA already before running the playbook, you need to provide the credentials set during the deplyment process  
 nsx:
@@ -46,7 +46,7 @@ management_network:
   nsx_manager_ip: 192.168.210.15
   edge01_ip: 192.168.210.17
   edge02_ip: 192.168.210.18
-  portgroup_name: Site-B-vDS-02-Mgmt
+  portgroup_name: Site-B-vDS-01-Mgmt
   nsxgateway_serviceinterface_present: False #When connecting the DC in a Box to an Untrusted external network (i.e., the Internet set this to True)
   nsxgateway_serviceinterface_ip: 192.168.100.1 #An IP for the service interface on the management network is only required if "nsxgateway_serviceinterface_present" is set to "True"
 
