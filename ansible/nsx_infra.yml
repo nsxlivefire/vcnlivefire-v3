@@ -81,9 +81,9 @@
       with_items:
         - "{{ transport_zones }}"
 
-    - name: Pause for 2 minutes so that TZ are available (!!!DO NOT SKIP!!!)
+    - name: Pause for 1 minutes so that TZ are available (!!!DO NOT SKIP!!!)
       pause:
-        minutes: 2
+        minutes: 1
 
     - name: Create Transport Node Profiles
       vmware.ansible_for_nsxt.nsxt_transport_node_profiles:
@@ -132,9 +132,9 @@
       with_items:
         - "{{ segments }}"
 
-    - name: Pause for 8 minutes so that VLAN Segments are Ready (!!!DO NOT SKIP!!!)
+    - name: Pause for 10 minutes so that VLAN Segments are Ready (!!!DO NOT SKIP!!!)
       pause:
-        minutes: 8
+        minutes: 10
 
     - name: Create Edge Transport Nodes
       vmware.ansible_for_nsxt.nsxt_transport_nodes:
@@ -153,9 +153,9 @@
       with_items:
         - "{{ transport_nodes }}"
 
-    - name: Pause for 8 minutes so that Edge Nodes are Ready (!!!DO NOT SKIP!!!)
+    - name: Pause for 10 minutes so that Edge Nodes are Ready (!!!DO NOT SKIP!!!)
       pause:
-        minutes: 8
+        minutes: 10
 
     - name: Add edge cluster
       vmware.ansible_for_nsxt.nsxt_edge_clusters:
