@@ -10,21 +10,21 @@ data "nsxt_policy_transport_zone" "edge-vlan-tz" {
 }
 
 # Edge Cluster
-data "nsxt_policy_edge_cluster" "edge-cluster-01" {
+data "nsxt_policy_edge_cluster" "edge-cluster-02" {
    provider = nsxt.lm-site-b
-   display_name = "edge-cluster-01"
+   display_name = "edge-cluster-02"
 }
 
 # Edge Nodes
 data "nsxt_policy_edge_node" "edge-01b" {
     provider = nsxt.lm-site-b
-    edge_cluster_path   = data.nsxt_policy_edge_cluster.edge-cluster-01.path
+    edge_cluster_path   = data.nsxt_policy_edge_cluster.edge-cluster-02.path
     display_name        = "edge-01b"
 }
 
 data "nsxt_policy_edge_node" "edge-02b" {
     provider = nsxt.lm-site-b
-    edge_cluster_path   = data.nsxt_policy_edge_cluster.edge-cluster-01.path
+    edge_cluster_path   = data.nsxt_policy_edge_cluster.edge-cluster-02.path
     display_name        = "edge-02b"
 }
 
@@ -138,7 +138,7 @@ resource "nsxt_policy_bgp_neighbor" "ToR-B" {
 resource "nsxt_policy_tier1_gateway" "t1-internal" {
     provider = nsxt.lm-site-b
     display_name              = "t1-internal"
-    edge_cluster_path         = data.nsxt_policy_edge_cluster.edge-cluster-01.path
+    edge_cluster_path         = data.nsxt_policy_edge_cluster.edge-cluster-02.path
     failover_mode             = "NON_PREEMPTIVE"
     default_rule_logging      = "false"
     enable_firewall           = "true"
