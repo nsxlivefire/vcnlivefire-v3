@@ -160,26 +160,26 @@ resource "nsxt_policy_tier1_gateway" "t1-internal" {
     }
 }
 
-# Create Tenant Segments
-resource "nsxt_policy_segment" "ov-web" {
+# Create NSX-ALB Segments
+resource "nsxt_policy_segment" "ov-se-mgmt" {
     provider = nsxt.lm-site-b
-    display_name = "ov-web"
+    display_name = "ov-se-mgmt"
     connectivity_path   = nsxt_policy_tier1_gateway.t1-internal.path
     transport_zone_path = data.nsxt_policy_transport_zone.overlay-tz.path
     
     subnet {
-      cidr        = "172.26.10.1/24"
+      cidr        = "172.26.90.1/24"
     }
 }
 
-resource "nsxt_policy_segment" "ov-db" {
+resource "nsxt_policy_segment" "ov-lb-vip" {
     provider = nsxt.lm-site-b
-    display_name = "ov-db"
+    display_name = "ov-lb-vip"
     connectivity_path   = nsxt_policy_tier1_gateway.t1-internal.path
     transport_zone_path = data.nsxt_policy_transport_zone.overlay-tz.path
     
     subnet {
-      cidr        = "172.26.20.1/24"
+      cidr        = "172.26.100.1/24"
     }
 }
 
