@@ -153,9 +153,9 @@
       with_items:
         - "{{ transport_nodes }}"
 
-    - name: Pause for 10 minutes so that Edge Nodes are Ready (!!!DO NOT SKIP!!!)
+    - name: Pause for 15 minutes so that Edge Nodes are Ready (!!!DO NOT SKIP!!!)
       pause:
-        minutes: 10
+        minutes: 15
 
     - name: Add edge cluster
       vmware.ansible_for_nsxt.nsxt_edge_clusters:

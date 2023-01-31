@@ -421,7 +421,7 @@
 
   "edge_clusters": [
     {
-      "display_name": "edge-cluster-01",
+      "display_name": "edge-cluster-02",
       "cluster_profile_binding_id": "91bcaa06-47a1-11e4-8316-17ffc770799b",
       "members": [
         {
