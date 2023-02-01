@@ -60,7 +60,7 @@ resource "nsxt_policy_tier0_gateway" "t0-gateway" {
     default_rule_logging      = false
     enable_firewall           = false
     ha_mode                   = "ACTIVE_ACTIVE"
-    edge_cluster_path         = data.nsxt_policy_edge_cluster.edge-cluster-01.path
+    edge_cluster_path         = data.nsxt_policy_edge_cluster.edge-cluster-02.path
 
     bgp_config {
         ecmp            = true               
