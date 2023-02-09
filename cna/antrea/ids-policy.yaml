@@ -1,0 +1,9 @@
+apiVersion: crd.antrea.tanzu.vmware.com/v1alpha1
+kind: IDPSPolicy
+metadata:
+  name: test-ids-policy
+spec:
+  appliedTo:
+    podSelector:
+      matchLabels:
+        app: web
