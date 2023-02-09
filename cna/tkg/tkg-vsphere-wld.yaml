@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: tkg-wld
+  name: tkg-vsphere-wld
   namespace: default
 stringData:
   password: VMware1!
@@ -14,8 +14,8 @@ metadata:
     osInfo: ubuntu,20.04,amd64
     tkg/plan: dev
   labels:
-    tkg.tanzu.vmware.com/cluster-name: tkg-wld
-  name: tkg-wld
+    tkg.tanzu.vmware.com/cluster-name: tkg-vsphere-wld
+  name: tkg-vsphere-wld
   namespace: default
 spec:
   clusterNetwork:
@@ -59,7 +59,7 @@ spec:
         resourcePool: /Site-A/host/Cluster-01/Resources/tkg
         server: vcsa-01a.corp.local
         storagePolicyID: ""
-        #        template: /Site-A/vm/templates/ubuntu-2004-efi-kube-v1.24.9+vmware.1
+        template: /Site-A/vm/templates/ubuntu-2004-efi-kube-v1.24.9+vmware.1
         tlsThumbprint: ""
     - name: user
       value:
