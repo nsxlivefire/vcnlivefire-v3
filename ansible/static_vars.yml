@@ -33,22 +33,22 @@
 
 
   "transport_zones": [
-    {
-      "display_name": "overlay-tz",
-      "description": "NSX Overlay Transport Zone",
-      "transport_type": "OVERLAY",
-      "is_default": "true",
-      "uplink_teaming_policy_names": []
-    },
-    {
-      "display_name": "host-vlan-tz",
-      "description": "NSX VLAN Transport Zone for ESX Servers",
-      "transport_type": "VLAN",
-      "is_default": "false",
-      "uplink_teaming_policy_names": [  "uplink-left-active-uplink-right-standby" , "uplink-right-active-uplink-left-standby" ],
-      "host_switch_name": "host-switch"
-    }
-    ,
+#    {
+#      "display_name": "overlay-tz",
+#      "description": "NSX Overlay Transport Zone",
+#      "transport_type": "OVERLAY",
+#      "is_default": "true",
+#      "uplink_teaming_policy_names": []
+#    },
+#    {
+#      "display_name": "host-vlan-tz",
+#      "description": "NSX VLAN Transport Zone for ESX Servers",
+#      "transport_type": "VLAN",
+#      "is_default": "false",
+#      "uplink_teaming_policy_names": [  "uplink-left-active-uplink-right-standby" , "uplink-right-active-uplink-left-standby" ],
+#      "host_switch_name": "host-switch"
+#    }
+#    ,
     {
       "display_name": "edge-vlan-tz",
       "description": "NSX VLAN Transport Zone for Edge Nodes",
@@ -61,14 +61,14 @@
 
   "segments": [
     { "display_name": "edge-uplink-left",
-      "transport_zone_name": "host-vlan-tz",
+      "transport_zone_name": "nsx-vlan-transportzone",
       "uplink_teaming_policy_name" : "uplink-left-active-uplink-right-standby",
-      "vlan_ids": "{{edge_uplink_left_vlan_id}},{{overlay_vlan_id}}"
+      "vlan_ids": "{{management_vlan_id}},{{edge_uplink_left_vlan_id}},{{overlay_vlan_id}}"
     },
     { "display_name": "edge-uplink-right",
-      "transport_zone_name": "host-vlan-tz",
+      "transport_zone_name": "nsx-vlan-transportzone",
       "uplink_teaming_policy_name" : "uplink-right-active-uplink-left-standby",
-      "vlan_ids": "{{edge_uplink_right_vlan_id}},{{overlay_vlan_id}}"
+      "vlan_ids": "{{management_vlan_id}},{{edge_uplink_right_vlan_id}},{{overlay_vlan_id}}"
     }
   ],
 
@@ -222,10 +222,10 @@
             },
           "transport_zone_endpoints": [
             {
-              "transport_zone_name": "overlay-tz"
+              "transport_zone_name": "nsx-overlay-transportzone"
             },
             {
-              "transport_zone_name": "host-vlan-tz"
+              "transport_zone_name": "nsx-vlan-transportzone"
             }
           ]
         }
@@ -264,7 +264,7 @@
             },
           "transport_zone_endpoints": [
             {
-              "transport_zone_name": "overlay-tz"
+              "transport_zone_name": "nsx-overlay-transportzone"
             },
             {
               "transport_zone_name": "edge-vlan-tz"
@@ -288,8 +288,8 @@
               }
             },
             "resource_allocation": {
-              "cpu_count": 4,
-              "memory_allocation_in_mb": 8192
+              "cpu_count": 2,
+              "memory_allocation_in_mb": 4096
             },
             "storage": "{{edge_nodes.edge1_datastore}}",
             "host": "{{edge_nodes.edge1_host}}",
@@ -356,7 +356,7 @@
             },
           "transport_zone_endpoints": [
             {
-              "transport_zone_name": "overlay-tz"
+              "transport_zone_name": "nsx-overlay-transportzone"
             },
             {
               "transport_zone_name": "edge-vlan-tz"
@@ -380,8 +380,8 @@
               }
             },
             "resource_allocation": {
-              "cpu_count": 4,
-              "memory_allocation_in_mb": 8192
+              "cpu_count": 2,
+              "memory_allocation_in_mb": 4096
             },
             "storage": "{{edge_nodes.edge2_datastore}}",
             "host": "{{edge_nodes.edge2_host}}",

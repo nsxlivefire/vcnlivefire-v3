@@ -6,7 +6,6 @@ vcenter:
   username: administrator@vsphere.local
   password: VMware1!
   cluster: Cluster-02
-  #  cluster: "Cluster-02/Resources/nsx"
   vds: Site-B-vDS-01
 
 #The NSX Manager appliace must be deployed from OVA already before running the playbook, you need to provide the credentials set during the deplyment process  

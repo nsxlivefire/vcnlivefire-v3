@@ -66,6 +66,22 @@
       with_items:
         - "{{host_uplink_profiles}}"
 
+    - name: Create default VLAN Transport Zone teaming policies
+      uri:
+        method: PATCH
+        url: https://nsxmgr-01b.corp.local/policy/api/v1/infra/sites/default/enforcement-points/default/transport-zones/a95c914d-748d-497c-94ab-10d4647daeba
+        user: "{{ nsx.username }}"
+        password: "{{ nsx.password }}"
+        validate_certs: "{{ validate_certs }}"
+        body:
+          display_name: nsx-vlan-transportzone
+          tz_type: VLAN_BACKED
+          uplink_teaming_policy_names:
+          - uplink-left-active-uplink-right-standby
+          - uplink-right-active-uplink-left-standby
+        body_format: json
+        force_basic_auth: yes
+    
     - name: Create transport zone
       vmware.ansible_for_nsxt.nsxt_transport_zones:
         hostname: "{{ nsx_node1.mgmt_ip }}"
@@ -133,7 +149,7 @@
       with_items:
         - "{{ segments }}"
 
-    - name: Pause for 10 minutes so that VLAN Segments are Ready (!!!DO NOT SKIP!!!)
+    - name: Pause for 10 minutes so that Host TN and Edge VLAN Segments are Ready (!!!DO NOT SKIP!!!)
       pause:
         minutes: 10
 
@@ -149,7 +165,7 @@
           host_switches: "{{ item.host_switches }}"
         node_deployment_info: "{{ item.node_deployment_info }}"
         state: "{{ state }}"
-      async: 1000
+      async: 2000
       poll: 0
       with_items:
         - "{{ transport_nodes }}"
