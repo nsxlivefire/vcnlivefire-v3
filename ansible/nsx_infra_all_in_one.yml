@@ -2,6 +2,7 @@
 - hosts: 127.0.0.1
   connection: local
   become: yes
+  gather_facts: no
   vars_files:
     - static_vars.yml
     - user_defined_vars.yml
