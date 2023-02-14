@@ -1,0 +1,15 @@
+#
+- hosts: 127.0.0.1
+  connection: local
+  become: yes
+  vars_files:
+    - static_vars.yml
+    - user_defined_vars.yml
+
+- import_playbook: 01_register_compute_manager.yml
+- import_playbook: 02_create_ip_pools.yml
+- import_playbook: 03_create_uplink_profiles.yml
+- import_playbook: 04_create_transport_zones.yml
+- import_playbook: 05_create_transport_node_profile_and_attach_it.yml
+- import_playbook: 06_create_edge_vlan_segments.yml
+- import_playbook: 07_deploy_edges_and_create_edge_cluster.yml

@@ -1,0 +1,23 @@
+- hosts: 127.0.0.1
+  connection: local
+  become: yes
+  vars_files:
+    - static_vars.yml
+    - user_defined_vars.yml
+  tasks:
+    - name: Register compute manager
+      vmware.ansible_for_nsxt.nsxt_fabric_compute_managers:
+        hostname: "{{ nsx_node1.hostname }}"
+        username: "{{ nsx.username }}"
+        password: "{{ nsx.password }}"
+        validate_certs: "{{ validate_certs }}"
+        display_name: "{{ item.display_name }}"
+        server: "{{ item.display_name }}"
+        origin_type: "{{ item.origin_type }}"
+        credential:
+          credential_type: "{{ item.credential_type }}"
+          username: "{{ item.username }}"
+          password: "{{ item.password }}"
+        state: present
+      with_items:
+        - "{{compute_managers}}"

@@ -1,7 +1,7 @@
 # Data Sources we need for reference later
-data "nsxt_policy_transport_zone" "overlay-tz" {
+data "nsxt_policy_transport_zone" "nsx-overlay-transportzone" {
    provider = nsxt.lm-site-b
-   display_name = "overlay-tz"
+   display_name = "nsx-overlay-transportzone"
 }
 
 data "nsxt_policy_transport_zone" "edge-vlan-tz" {
@@ -165,7 +165,7 @@ resource "nsxt_policy_segment" "ov-se-mgmt" {
     provider = nsxt.lm-site-b
     display_name = "ov-se-mgmt"
     connectivity_path   = nsxt_policy_tier1_gateway.t1-internal.path
-    transport_zone_path = data.nsxt_policy_transport_zone.overlay-tz.path
+    transport_zone_path = data.nsxt_policy_transport_zone.nsx-overlay-transportzone.path
     
     subnet {
       cidr        = "172.26.90.1/24"
@@ -176,7 +176,7 @@ resource "nsxt_policy_segment" "ov-lb-vip" {
     provider = nsxt.lm-site-b
     display_name = "ov-lb-vip"
     connectivity_path   = nsxt_policy_tier1_gateway.t1-internal.path
-    transport_zone_path = data.nsxt_policy_transport_zone.overlay-tz.path
+    transport_zone_path = data.nsxt_policy_transport_zone.nsx-overlay-transportzone.path
     
     subnet {
       cidr        = "172.26.100.1/24"

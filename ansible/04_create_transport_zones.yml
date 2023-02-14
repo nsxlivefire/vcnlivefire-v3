@@ -1,0 +1,42 @@
+- hosts: 127.0.0.1
+  connection: local
+  become: yes
+  vars_files:
+    - static_vars.yml
+    - user_defined_vars.yml
+  tasks:
+    - name: Create default VLAN Transport Zone teaming policies
+      uri:
+        method: PATCH
+        url: https://nsxmgr-01b.corp.local/policy/api/v1/infra/sites/default/enforcement-points/default/transport-zones/a95c914d-748d-497c-94ab-10d4647daeba
+        user: "{{ nsx.username }}"
+        password: "{{ nsx.password }}"
+        validate_certs: "{{ validate_certs }}"
+        body:
+          display_name: nsx-vlan-transportzone
+          tz_type: VLAN_BACKED
+          uplink_teaming_policy_names:
+          - uplink-left-active-uplink-right-standby
+          - uplink-right-active-uplink-left-standby
+        body_format: json
+        force_basic_auth: yes
+
+    - name: Create transport zone
+      vmware.ansible_for_nsxt.nsxt_transport_zones:
+        hostname: "{{ nsx_node1.mgmt_ip }}"
+        username: "{{ nsx.username }}"
+        password: "{{ nsx.password }}"
+        validate_certs: "{{ validate_certs }}"
+        resource_type: "TransportZone"
+        display_name: "{{ item.display_name }}"
+        is_default: "{{ item.is_default }}"
+        description: "{{ item.description }}"
+        transport_type: "{{ item.transport_type }}"
+        uplink_teaming_policy_names: "{{item.uplink_teaming_policy_names}}"
+        state: "{{ state }}"
+      with_items:
+        - "{{ transport_zones }}"
+
+    - name: Pause for 1 minutes so that TZ are available (!!!DO NOT SKIP!!!)
+      pause:
+        minutes: 1
