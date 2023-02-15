@@ -1,3 +1,13 @@
-curl -k -u 'admin:VMware1!VMware1!' -H 'Content-Type: application/json' \
---data '@/home/livefire/vcnlivefire-v3/terraform/tagreplication.json' \
---request PUT 'https://192.168.110.16/global-manager/api/v1/global-infra/vm-tag-replication-policies/policy1'
+{
+    "display_name":"vm tag replication policy lm-site-a to lm-site-b",
+    "description":"vm tag replication policy1",
+    "protected_site": "/global-infra/sites/lm-site-a",
+    "recovery_sites": [
+        "/global-infra/sites/lm-site-b"
+    ],
+    "groups":[
+        "/global-infra/domains/default/groups/g-web-stretched",
+        "/global-infra/domains/default/groups/g-db-stretched"
+    ],
+    "vm_match_criteria": "MATCH_BIOS_UUID_NAME"
+}
