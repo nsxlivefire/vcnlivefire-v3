@@ -21,3 +21,18 @@
         named_teamings: "{{item.named_teamings}}"
       with_items:
         - "{{edge_uplink_profiles}}"
+
+    - name: Create host uplink profile
+      vmware.ansible_for_nsxt.nsxt_uplink_profiles:
+        hostname: "{{ nsx_node1.mgmt_ip }}"
+        username: "{{ nsx.username }}"
+        password: "{{ nsx.password }}"
+        validate_certs: "{{ validate_certs }}"
+        resource_type: UplinkHostSwitchProfile
+        display_name: "{{item.display_name}}"
+        teaming: "{{item.teaming}}"
+        transport_vlan: "{{item.transport_vlan}}"
+        state: "present"
+        named_teamings: "{{item.named_teamings}}"
+      with_items:
+        - "{{host_uplink_profiles}}"
