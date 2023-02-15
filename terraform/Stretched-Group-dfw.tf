@@ -1,7 +1,7 @@
 #Create Global Group for 2-tier webapp for grouping Web and DB VMs in seperate groups
 
 resource "nsxt_policy_group" "g-web-stretched" {
-  provider = nsxt.global_manager
+  provider = nsxt.gm-site-a
   display_name = "g-web-stretched"
   description  = "Stretched Global web group"
   nsx_id = "g-web-stretched"
@@ -21,7 +21,7 @@ resource "nsxt_policy_group" "g-web-stretched" {
            }
 }
 resource "nsxt_policy_group" "g-db-stretched" {
-  provider = nsxt.global_manager
+  provider = nsxt.gm-site-a
   display_name = "g-db-stretched"
   description  = "Stretched Global db group"
   nsx_id = "g-db-stretched"
@@ -44,20 +44,20 @@ resource "nsxt_policy_group" "g-db-stretched" {
 # Create 2-Tier webapp Global DFW rule
 
 data "nsxt_policy_service" "HTTPS" {
-  provider = nsxt.global_manager
+  provider = nsxt.gm-site-a
   display_name = "HTTPS"
 }
 data "nsxt_policy_service" "ICMPv4-ALL"{
-  provider = nsxt.global_manager
+  provider = nsxt.gm-site-a
   display_name = "ICMPv4-ALL"
 }
 data "nsxt_policy_service" "MySQL"{
-  provider = nsxt.global_manager
+  provider = nsxt.gm-site-a
   display_name = "MySQL"
 }
 
 resource "nsxt_policy_security_policy" "stretched-dfw" {
-  provider = nsxt.global_manager
+  provider = nsxt.gm-site-a
   display_name = "WebApp Stretched Policy"
   description  = "2-tier webapp Security Policy"
   category     = "Application"
