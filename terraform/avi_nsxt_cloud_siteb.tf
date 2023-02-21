@@ -29,6 +29,12 @@ data "nsxt_policy_tier1_gateway" "nsxt_cloud_lr1" {
   display_name = var.nsxt_mgmt_lr_id
 }
 
+resource "nsxt_policy_dhcp_relay" "dhcp_relay" {
+  provider = nsxt.lm-site-b
+  display_name     = "controlcenter-dhcp-relay"
+  server_addresses = ["192.168.110.10"]
+}
+
 # Create NSX-ALB Segments
 resource "nsxt_policy_segment" "ov-se-mgmt" {
     provider = nsxt.lm-site-b
@@ -38,6 +44,7 @@ resource "nsxt_policy_segment" "ov-se-mgmt" {
     subnet {
       cidr        = "172.26.90.1/24"
     }
+    dhcp_config_path = nsxt_policy_dhcp_relay.dhcp_relay.path
 }
 
 resource "nsxt_policy_segment" "ov-lb-vip" {
@@ -48,11 +55,8 @@ resource "nsxt_policy_segment" "ov-lb-vip" {
     subnet {
       cidr        = "172.26.100.1/24"
     }
+    dhcp_config_path = nsxt_policy_dhcp_relay.dhcp_relay.path
 }
-
-#
-# Creating the resources
-#
 
 # Creating the content library in vCenter
 resource "vsphere_content_library" "content_library" {
@@ -132,107 +136,21 @@ resource "avi_serviceenginegroup" "cmp-se-group" {
 	name			= "Default-Group"
 	cloud_ref		= avi_cloud.nsxt_cloud.id
 	tenant_ref		= var.tenant
-	se_name_prefix		= "cmp"
+#	se_name_prefix		= "cmp"
 	max_se			= 4
 	buffer_se		= 0
 	se_deprovision_delay	= 1
         mem_reserve             = "false"
-#	vcenters {
-#		vcenter_ref = avi_vcenterserver.vcenter_server.id
-#    nsxt_clusters {
-#      cluster_ids = [data.vsphere_compute_cluster.cmp.id]
-#      include = true
-#    }
-#	}
-}
-
-# configure networks
-resource "avi_network" "ov-se-mgmt" {
-    depends_on     = [time_sleep.wait_20_seconds]
-    name = "ov-se-mgmt"
-    tenant_ref		= var.tenant
-    cloud_ref               = avi_cloud.nsxt_cloud.id
-    dhcp_enabled = "false"
-    ip6_autocfg_enabled = "false"
-    configured_subnets {
-		prefix {
-			ip_addr {
-				addr = "172.26.90.0"
-				type = "V4"
-			}
-			mask = 24
-		}
-		static_ip_ranges {
-			type  = "STATIC_IPS_FOR_VIP"
-			range {
-				begin {
-					addr = "172.26.90.100"
-					type = "V4"
-				}
-				end {
-					addr = "172.26.90.120"
-					type = "V4"
-				}
-			}
-		}
-	}
-}
-
-#data "avi_vrfcontext" "t1_internal" {
-#    depends_on     = [time_sleep.wait_20_seconds]
-#    name = "t1-internal"
-#    cloud_ref               = avi_cloud.nsxt_cloud.id
-#}
-
-resource "avi_vrfcontext" "t1_internal" {
-    depends_on     = [time_sleep.wait_20_seconds]
-    name = "t1-internal"
-    cloud_ref               = avi_cloud.nsxt_cloud.id
-    static_routes {
-		prefix {
-		ip_addr {
-				addr = "172.16.10.0"
-				type = "V4"
-			}
-		mask = 24
-		}
-                next_hop {
-			type  = "V4"
-			addr = "172.26.100.1"
-			}
-                route_id = "1"
-    } 
-}
-
-resource "avi_network" "ov-lb-vip" {
-    depends_on     = [time_sleep.wait_20_seconds]
-    name = "ov-lb-vip"
-    tenant_ref		= var.tenant
-    cloud_ref               = avi_cloud.nsxt_cloud.id
-    dhcp_enabled = "false"
-    ip6_autocfg_enabled = "false"
-    vrf_context_ref     = avi_vrfcontext.t1_internal.id
-    configured_subnets {
-		prefix {
-			ip_addr {
-				addr = "172.26.100.0"
-				type = "V4"
-			}
-			mask = 24
-		}
-		static_ip_ranges {
-			type  = "STATIC_IPS_FOR_VIP"
-			range {
-				begin {
-					addr = "172.26.100.100"
-					type = "V4"
-				}
-				end {
-					addr = "172.26.100.120"
-					type = "V4"
-				}
-			}
-		}
+	vcenters {
+           vcenter_ref = avi_vcenterserver.vcenter_server.id
+           nsxt_clusters {
+                cluster_ids = [data.vsphere_compute_cluster.cmp.id]
+                include = true
+          }
+          nsxt_datastores {
+                    ds_ids =  [data.vsphere_datastore.datastore.id]
+                    include = false
+                  }
        }
 }
 

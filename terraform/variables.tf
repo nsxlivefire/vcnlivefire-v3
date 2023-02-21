@@ -1,3 +1,85 @@
+variable "avi_username" {
+  type    = string
+}
+variable "avi_password" {
+  type    = string
+}
+variable "avi_version" {
+  type    = string
+}
+variable "tenant" {
+  type    = string
+}
+variable "cloud_name" {
+  type    = string
+}
+variable "nsxt_cloud_cred_name" {
+  type    = string
+}
+variable "vcsa_cred_name" {
+  type    = string
+}
+variable "vcenter_username" {
+  type    = string
+}
+variable "vcenter_password" {
+  type    = string
+}
+variable "vcenter_server" {
+  type    = string
+}
+variable "content_library_name" {
+  type    = string
+}
+variable "datacenter" {
+  type    = string
+}
+variable "datastore" {
+  type    = string
+}
+variable "cluster" {
+  type    = string
+}
+variable "nsxt_cloud_url" {
+  type    = string
+}
+variable "nsxt_cloud_username" {
+  type    = string
+}
+variable "nsxt_cloud_password" {
+  type    = string
+}
+variable "nsxt_cloud_prefix" {
+  type    = string
+}
+variable "nsxt_cloud_vcenter_name" {
+  type    = string
+}
+variable "nsxt_cloud_mgmt_tz_name" {
+  type    = string
+}
+variable "nsxt_cloud_data_tz_name" {
+  type    = string
+}
+variable "nsxt_cloud_mgmt_tz_type" {
+  type    = string
+}
+variable "nsxt_cloud_data_tz_type" {
+  type    = string
+}
+variable "nsxt_mgmt_lr_id" {
+  type    = string
+}
+#variable "nsxt_mgmt_segment_id" {
+#  type    = string
+#}
+variable "nsxt_cloud_lr1" {
+  type    = string
+}
+#variable "nsxt_cloud_overlay_seg1" {
+#  type    = string
+#}
+
 variable "nsxmgr-01a_ip" {
     type    = string
     default = "192.168.110.15"
@@ -18,25 +100,8 @@ variable "nsx_password" {
     type    = string
     default = "VMware1!VMware1!"
 }
-variable "avi_username" {
-  type    = string
-  default = "admin"
-}
-variable "avi_password" {
-  type    = string
-  default = "VMware1!"
-}
 variable "avi_controller" {
   type    = string
-  default = "avi-01a.corp.local"
-}
-variable "avi_version" {
-  type    = string
-  default = "21.1.3"
-}
-variable "cloud_name" {
-  type    = string
-  default = "nsxmgr-01b"
 }
 variable "vs_name" {
   type    = string
@@ -78,10 +143,6 @@ variable "dns_vs_address" {
   type    = string
   default = "172.26.100.2"
 }
-variable "nsxt_cloud_lr1" {
-  type    = string
-  default = "t1-internal"
-}
 variable "vs_port" {
   type    = number
   default = "443"
@@ -112,5 +173,6 @@ variable "networkprofile" {
 }
 variable "ssl_cert" {
   type    = string
-  default = "webapp.corp.local"
+#  default = "webapp.corp.local"
 }
+

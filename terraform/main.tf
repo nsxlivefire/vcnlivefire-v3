@@ -7,7 +7,7 @@ terraform {
     }
     avi = {
       source  = "vmware/avi"
-      version = "22.1.2"
+      version = "22.1.3"
     }
   }
 }
@@ -57,4 +57,12 @@ provider "avi" {
         avi_password            = var.avi_password
         avi_version             = var.avi_version
         avi_tenant              = "admin"
+}
+
+# vCenter provider
+provider "vsphere" {
+        user                    = var.vcenter_username
+        password                = var.vcenter_password
+        vsphere_server          = var.vcenter_server
+        allow_unverified_ssl    = true
 }

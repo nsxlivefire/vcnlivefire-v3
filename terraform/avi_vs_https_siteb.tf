@@ -14,9 +14,9 @@ data "avi_applicationprofile" "applicationprofile" {
 data "avi_networkprofile" "networkprofile" {
 	name	= var.networkprofile
 }
-#data "avi_vrfcontext" "t1-internal" {
-#	cloud_ref = data.avi_cloud.nsxt_cloud.id
-#}
+data "avi_vrfcontext" "t1-internal" {
+	cloud_ref = data.avi_cloud.nsxt_cloud.id
+}
 data "avi_sslkeyandcertificate" "ssl_cert" {
         name      = var.ssl_cert
 }
@@ -26,14 +26,12 @@ data "avi_sslprofile" "ssl_profile" {
 data "avi_healthmonitor" "healthmonitor" {
         name      = var.healthmonitor
 }
-
 ## create the avi vip
 resource "avi_vsvip" "vsvip" {
 	name		= "${var.vs_name}-vip"
 	tenant_ref	= data.avi_tenant.admin.id
 	cloud_ref	= data.avi_cloud.nsxt_cloud.id
-	tier1_lr        = var.nsxt_cloud_lr1
-
+	tier1_lr        = data.nsxt_policy_tier1_gateway.nsxt_cloud_lr1.path
 	# static vip IP address
 	vip {
 		vip_id = "0"
@@ -48,7 +46,7 @@ resource "avi_pool" "lb_pool" {
         name = var.pool_name
         default_server_port = var.pool_default_server_port
         lb_algorithm = var.lb_algorithm
-        tier1_lr = var.nsxt_cloud_lr1
+	tier1_lr        = data.nsxt_policy_tier1_gateway.nsxt_cloud_lr1.path
         ssl_profile_ref = data.avi_sslprofile.ssl_profile.id
         servers {
                 ip {
