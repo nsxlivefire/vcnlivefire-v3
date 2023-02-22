@@ -54,7 +54,7 @@ resource "nsxt_policy_vlan_segment" "vlan-400" {
 # Create Site-B Tier-0 Gateway
 resource "nsxt_policy_tier0_gateway" "t0-gateway" {
     provider = nsxt.lm-site-b
-    display_name              = "t0-stretched"
+    display_name              = "t0-gateway"
     description               = "Site-B T0 Gateway"
     failover_mode             = "NON_PREEMPTIVE"
     default_rule_logging      = false
