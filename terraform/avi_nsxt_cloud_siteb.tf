@@ -10,11 +10,6 @@ data "vsphere_compute_cluster" "cmp" {
 	name          = var.cluster
 	datacenter_id = data.vsphere_datacenter.dc.id
 }
-#data "vsphere_compute_cluster" "mgmt" {
-#	name          = "mgmt"
-#	datacenter_id = data.vsphere_datacenter.dc.id
-#}
-
 ## NSX-T objects
 data "nsxt_policy_transport_zone" "nsxt_mgmt_tz_name" {
   provider = nsxt.lm-site-b
@@ -24,11 +19,26 @@ data "nsxt_policy_transport_zone" "nsxt_data_tz_name" {
   provider = nsxt.lm-site-b
   display_name = var.nsxt_cloud_data_tz_name
 }
-data "nsxt_policy_tier1_gateway" "nsxt_cloud_lr1" {
-  provider = nsxt.lm-site-b
-  display_name = var.nsxt_mgmt_lr_id
+data "nsxt_policy_tier0_gateway" "t0-gateway" {
+  provider = nsxt.gm-site-a
+  display_name = "t0-gateway-stretched"
 }
+resource "nsxt_policy_tier1_gateway" "nsxt_cloud_lr1" {
+    provider = nsxt.lm-site-b
+    display_name              = "t1-internal"
+#    edge_cluster_path         = data.nsxt_policy_edge_cluster.edge-cluster-02.path
+#    failover_mode             = "NON_PREEMPTIVE"
+#    default_rule_logging      = "false"
+#    enable_firewall           = "true"
+#    enable_standby_relocation = "false"
+    tier0_path                = data.nsxt_policy_tier0_gateway.t0-gateway.path
+    route_advertisement_types = ["TIER1_STATIC_ROUTES", "TIER1_CONNECTED"]
 
+    tag {
+        scope = "zone"
+        tag   = "internal"
+    }
+}
 resource "nsxt_policy_dhcp_relay" "dhcp_relay" {
   provider = nsxt.lm-site-b
   display_name     = "controlcenter-dhcp-relay"
@@ -39,8 +49,8 @@ resource "nsxt_policy_dhcp_relay" "dhcp_relay" {
 resource "nsxt_policy_segment" "ov-se-mgmt" {
     provider = nsxt.lm-site-b
     display_name = "ov-se-mgmt"
-    connectivity_path   = nsxt_policy_tier1_gateway.t1-internal.path
-    transport_zone_path = data.nsxt_policy_transport_zone.nsx-overlay-transportzone.path
+    connectivity_path   = nsxt_policy_tier1_gateway.nsxt_cloud_lr1.path
+    transport_zone_path = data.nsxt_policy_transport_zone.nsxt_mgmt_tz_name.path
     subnet {
       cidr        = "172.26.90.1/24"
     }
@@ -50,8 +60,8 @@ resource "nsxt_policy_segment" "ov-se-mgmt" {
 resource "nsxt_policy_segment" "ov-lb-vip" {
     provider = nsxt.lm-site-b
     display_name = "ov-lb-vip"
-    connectivity_path   = nsxt_policy_tier1_gateway.t1-internal.path
-    transport_zone_path = data.nsxt_policy_transport_zone.nsx-overlay-transportzone.path
+    connectivity_path   = nsxt_policy_tier1_gateway.nsxt_cloud_lr1.path
+    transport_zone_path = data.nsxt_policy_transport_zone.nsxt_data_tz_name.path
     subnet {
       cidr        = "172.26.100.1/24"
     }
@@ -91,7 +101,7 @@ resource "avi_cloud" "nsxt_cloud" {
         tz_type = var.nsxt_cloud_mgmt_tz_type
         transport_zone = data.nsxt_policy_transport_zone.nsxt_mgmt_tz_name.path
         overlay_segment {
-          tier1_lr_id = data.nsxt_policy_tier1_gateway.nsxt_cloud_lr1.path
+          tier1_lr_id = nsxt_policy_tier1_gateway.nsxt_cloud_lr1.path
           segment_id  = nsxt_policy_segment.ov-se-mgmt.path
         }
       }
@@ -102,7 +112,7 @@ resource "avi_cloud" "nsxt_cloud" {
           segment_config_mode = "TIER1_SEGMENT_MANUAL"
           manual {
             tier1_lrs {
-              tier1_lr_id = data.nsxt_policy_tier1_gateway.nsxt_cloud_lr1.path
+              tier1_lr_id = nsxt_policy_tier1_gateway.nsxt_cloud_lr1.path
               segment_id  = nsxt_policy_segment.ov-lb-vip.path
             }
           }

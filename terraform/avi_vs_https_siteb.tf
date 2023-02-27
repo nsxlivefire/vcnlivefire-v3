@@ -26,6 +26,10 @@ data "avi_sslprofile" "ssl_profile" {
 data "avi_healthmonitor" "healthmonitor" {
         name      = var.healthmonitor
 }
+data "nsxt_policy_tier1_gateway" "nsxt_cloud_lr1" {
+  provider = nsxt.lm-site-b
+  display_name = "t1-internal"
+}
 ## create the avi vip
 resource "avi_vsvip" "vsvip" {
 	name		= "${var.vs_name}-vip"

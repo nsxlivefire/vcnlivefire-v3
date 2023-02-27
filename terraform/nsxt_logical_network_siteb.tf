@@ -54,7 +54,7 @@ resource "nsxt_policy_vlan_segment" "vlan-400" {
 # Create Site-B Tier-0 Gateway
 resource "nsxt_policy_tier0_gateway" "t0-gateway" {
     provider = nsxt.lm-site-b
-    display_name              = "t0-gateway"
+    display_name              = "t0-gateway-stretched"
     description               = "Site-B T0 Gateway"
     failover_mode             = "NON_PREEMPTIVE"
     default_rule_logging      = false
@@ -140,14 +140,14 @@ resource "nsxt_policy_gateway_redistribution_config" "t0-redistribution" {
   gateway_path = nsxt_policy_tier0_gateway.t0-gateway.path
   bgp_enabled  = true
   rule {
-    name  = "t1-internal-subnets"
+    name  = "t1-subnets"
     types = ["TIER1_CONNECTED", "TIER1_LB_VIP"]
   }
 }
-# Create Tier-1 Internal Gateway
-resource "nsxt_policy_tier1_gateway" "t1-internal" {
+# Create Tier-1 Legacy Gateway
+resource "nsxt_policy_tier1_gateway" "t1-legacy" {
     provider = nsxt.lm-site-b
-    display_name              = "t1-internal"
+    display_name              = "t1-legacy"
     edge_cluster_path         = data.nsxt_policy_edge_cluster.edge-cluster-02.path
     failover_mode             = "NON_PREEMPTIVE"
     default_rule_logging      = "false"
@@ -158,38 +158,6 @@ resource "nsxt_policy_tier1_gateway" "t1-internal" {
 
     tag {
         scope = "zone"
-        tag   = "internal"
+        tag   = "legacy"
     }
-
-#    route_advertisement_rule {
-#        name                      = "Tier 1 Networks"
-#        action                    = "PERMIT"
-#        subnets                   = ["172.26.10.0/24","172.26.20.0/24"]
-#        prefix_operator           = "GE"
-#        route_advertisement_types = ["TIER1_CONNECTED"]
-#    }
 }
-
-# Create NSX-ALB Segments
-#resource "nsxt_policy_segment" "ov-se-mgmt" {
-#    provider = nsxt.lm-site-b
-#    display_name = "ov-se-mgmt"
-#    connectivity_path   = nsxt_policy_tier1_gateway.t1-internal.path
-#    transport_zone_path = data.nsxt_policy_transport_zone.nsx-overlay-transportzone.path
-#    
-#    subnet {
-#      cidr        = "172.26.90.1/24"
-#    }
-#}
-#
-#resource "nsxt_policy_segment" "ov-lb-vip" {
-#    provider = nsxt.lm-site-b
-#    display_name = "ov-lb-vip"
-#    connectivity_path   = nsxt_policy_tier1_gateway.t1-internal.path
-#    transport_zone_path = data.nsxt_policy_transport_zone.nsx-overlay-transportzone.path
-#    
-#    subnet {
-#      cidr        = "172.26.100.1/24"
-#    }
-#}
-
