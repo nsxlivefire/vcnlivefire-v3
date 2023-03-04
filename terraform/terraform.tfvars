@@ -15,7 +15,7 @@ avi_username		= "admin"
 avi_password		= "VMware1!"
 avi_version		= "22.1.3"
 tenant                  = "admin"
-ssl_cert                = "Merged-ssl_cert_key-9HQ-1"
+ssl_cert                = "webapp.corp.local"
 
 # NSX-T cloud configuration
 nsxt_cloud_url = "nsxmgr-01b.corp.local"

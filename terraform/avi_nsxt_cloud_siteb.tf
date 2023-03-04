@@ -32,7 +32,7 @@ resource "nsxt_policy_tier1_gateway" "nsxt_cloud_lr1" {
 #    enable_firewall           = "true"
 #    enable_standby_relocation = "false"
     tier0_path                = data.nsxt_policy_tier0_gateway.t0-gateway.path
-    route_advertisement_types = ["TIER1_STATIC_ROUTES", "TIER1_CONNECTED"]
+    route_advertisement_types = ["TIER1_LB_VIP", "TIER1_CONNECTED"]
 
     tag {
         scope = "zone"
