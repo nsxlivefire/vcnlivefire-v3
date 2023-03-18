@@ -306,7 +306,9 @@
           "allow_ssh_root_login": "True",
           "enable_ssh": "True",
           "hostname": "edge-01b",
-          "dns_servers": "{{edge_nodes.dns_servers}}"
+          "dns_servers": "{{edge_nodes.dns_servers}}",
+          "ntp_servers": "{{edge_nodes.ntp_servers}}",
+          "search_domains": "{{edge_nodes.search_domains}}"
         }
       }
     },
@@ -394,11 +396,13 @@
         },
          "resource_type": "EdgeNode",
          "display_name": "edge-02b",
-           "node_settings": {
-           "allow_ssh_root_login": "True",
-           "enable_ssh": "True",
-           "hostname": "edge-02b",
-           "dns_servers": "{{edge_nodes.dns_servers}}"
+         "node_settings": {
+          "allow_ssh_root_login": "True",
+          "enable_ssh": "True",
+          "hostname": "edge-02b",
+          "dns_servers": "{{edge_nodes.dns_servers}}",
+          "ntp_servers": "{{edge_nodes.ntp_servers}}",
+          "search_domains": "{{edge_nodes.search_domains}}"
          }
     }
   }
