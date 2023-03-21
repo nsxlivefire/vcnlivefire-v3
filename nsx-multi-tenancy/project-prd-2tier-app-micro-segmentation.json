@@ -1,0 +1,106 @@
+{
+    "resource_type":"Infra",
+    "children":[
+    {
+        "resource_type":"ChildResourceReference",
+        "id":"default",
+        "target_type":"Domain",
+        "children":[
+        {
+          "resource_type":"ChildGroup",
+          "Group":{
+              "resource_type":"Group",
+              "display_name":"WEB",
+              "id":"web",
+              "expression":[
+              {
+                "member_type":"VirtualMachine",
+                "key":"Tag",
+                "operator":"EQUALS",
+		"scope_operator": "EQUALS",
+		"value": "webapp|web",
+                "resource_type":"Condition"
+              }
+            ]
+          }
+	},
+	{
+	  "resource_type":"ChildGroup",
+	  "Group":{
+              "resource_type":"Group",
+              "display_name":"DB",
+              "id":"db",
+              "expression":[
+              {
+                "member_type":"VirtualMachine",
+                "key":"Tag",
+                "operator":"EQUALS",
+		"scope_operator": "EQUALS",
+		"value": "webapp|db",
+                "resource_type":"Condition"
+              }
+            ]
+          }
+        },
+	{
+          "resource_type":"ChildSecurityPolicy",
+          "SecurityPolicy":{
+            "id":"project-prd-micro-segmentation",
+            "resource_type":"SecurityPolicy",
+            "display_name":"Project-Prd Micro-Segmentation",
+            "rules":[
+              {
+                "resource_type":"Rule",
+		"id":"https-access",
+                "display_name":"HTTPS Access",
+                "sequence_number":10,
+                "source_groups":[
+                  "ANY"
+                ],
+                "destination_groups":[
+                  "/orgs/default/projects/project-prd/infra/domains/default/groups/web"
+                ],
+                "services":[
+                  "/infra/services/HTTPS"
+                ],
+                "action":"ALLOW"
+              },
+              {
+                "resource_type":"Rule",
+	        "id":"mysql-access",
+                "display_name":"MySQL Access",
+                "sequence_number":20,
+                "source_groups":[
+                  "/orgs/default/projects/project-prd/infra/domains/default/groups/web"
+                ],
+                "destination_groups":[
+                  "/orgs/default/projects/project-prd/infra/domains/default/groups/db"
+                ],
+                "services":[
+                  "/infra/services/MySQL"
+                ],
+                "action":"ALLOW"
+              },
+              {
+                "resource_type":"Rule",
+	        "id":"default-drop",
+                "display_name":"Default Drop",
+                "sequence_number":30,
+                "source_groups":[
+                  "ANY"
+                ],
+                "destination_groups":[
+                  "ANY"
+                ],
+                "services":[
+                  "ANY"
+                ],
+                "action":"DROP"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

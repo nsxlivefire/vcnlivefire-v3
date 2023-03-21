@@ -1,0 +1,63 @@
+{
+  "resource_type": "Infra",
+  "children": [   
+    {
+      "resource_type": "ChildDomain",
+      "Domain": {
+        "id": "default",
+        "resource_type": "Domain",
+        "children": [
+          {
+            "resource_type": "ChildGroup",
+            "Group": {
+              "resource_type": "Group",
+              "id": "MGMT",
+              "display_name": "MGMT",
+              "expression": [
+                  {
+                      "ip_addresses": [
+                          "192.168.110.11"
+                      ],
+                      "resource_type": "IPAddressExpression"
+                  }
+              ],
+               "effective_member_types": [
+                  "IPAddress"
+              ]
+            }
+          },
+           {
+            "resource_type": "ChildSecurityPolicy",
+            "SecurityPolicy": {
+              "id": "Infra_Management_Policy",
+              "resource_type": "SecurityPolicy",
+              "display_name": "Infra_Management_Policy",
+			  "category": "Emergency",
+              "rules": [
+                {
+                  "resource_type": "Rule",
+                  "display_name": "Management_Access",
+                  "sequence_number": 1,
+                  "source_groups": [
+                    "/infra/domains/default/groups/MGMT"
+                  ],
+                  "destination_groups": [
+                    "ANY"
+                  ],
+                  "services": [
+                    "ANY"
+                  ],
+                  "scope": [
+                    "/orgs/default/projects/project-prd/infra/domains/default/groups/default",
+                    "/orgs/default/projects/project-dev/infra/domains/default/groups/default"
+                  ],
+                  "action": "ALLOW"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "resource_type": "SecurityPolicy",
+    "rules": [
+    {
+      "resource_type": "Rule",
+      "id":"allow-dns",
+      "display_name": "Allow DNS",
+      "sequence_number":1,
+      "source_groups": [
+        "ANY"
+      ],
+      "destination_groups": [
+        "/infra/domains/default/groups/DNS-Servers"
+      ],
+      "services": [
+          "/infra/services/DNS",
+          "/infra/services/DNS-UDP"
+      ],
+      "action" : "ALLOW"
+    }
+  ]
+}

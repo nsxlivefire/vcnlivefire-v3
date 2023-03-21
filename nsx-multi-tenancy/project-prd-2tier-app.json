@@ -1,0 +1,41 @@
+{
+  "resource_type": "Infra",
+  "children": [
+    {
+      "resource_type": "ChildTier1",
+      "marked_for_delete": false,
+      "Tier1": {
+        "resource_type": "Tier1",
+        "id": "t1-project-prd",
+        "display_name": "t1-project-prd",
+        "tier0_path":"/infra/tier-0s/t0-gateway",
+	"route_advertisement_types": [
+          "TIER1_CONNECTED"
+        ],
+        "children": [
+          {
+           "resource_type":"ChildLocaleServices",
+           "LocaleServices":{
+               "resource_type":"LocaleServices",
+               "id":  "default",
+                "edge_cluster_path": "/infra/sites/default/enforcement-points/default/edge-clusters/7e4d64d7-2e91-4cfe-83d7-9f6a8de50154"
+                }
+        },
+          {
+            "resource_type": "ChildSegment",
+            "Segment": {
+              "resource_type": "Segment",
+              "id": "ov-project-prd",
+              "display_name": "ov-project-prd",
+              "subnets": [
+                {
+                  "gateway_address": "172.16.140.1/24"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
