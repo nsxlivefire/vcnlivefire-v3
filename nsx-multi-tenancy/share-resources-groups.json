@@ -1,0 +1,8 @@
+{
+    "resource_objects": [
+        {
+            "resource_path": "/infra/domains/default/groups/DNS-Servers",
+            "include_children": false
+        }
+    ]
+}

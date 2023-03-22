@@ -15,10 +15,9 @@
               "expression":[
               {
                 "member_type":"VirtualMachine",
-                "key":"Tag",
-                "operator":"EQUALS",
-		"scope_operator": "EQUALS",
-		"value": "webapp|web",
+                "key":"Name",
+                "operator":"CONTAINS",
+		"value": "web",
                 "resource_type":"Condition"
               }
             ]
@@ -33,10 +32,9 @@
               "expression":[
               {
                 "member_type":"VirtualMachine",
-                "key":"Tag",
-                "operator":"EQUALS",
-		"scope_operator": "EQUALS",
-		"value": "webapp|db",
+                "key":"Name",
+                "operator":"CONTAINS",
+		"value": "db",
                 "resource_type":"Condition"
               }
             ]
@@ -80,22 +78,6 @@
                   "/infra/services/MySQL"
                 ],
                 "action":"ALLOW"
-              },
-              {
-                "resource_type":"Rule",
-	        "id":"default-drop",
-                "display_name":"Default Drop",
-                "sequence_number":30,
-                "source_groups":[
-                  "ANY"
-                ],
-                "destination_groups":[
-                  "ANY"
-                ],
-                "services":[
-                  "ANY"
-                ],
-                "action":"DROP"
               }
             ]
           }
