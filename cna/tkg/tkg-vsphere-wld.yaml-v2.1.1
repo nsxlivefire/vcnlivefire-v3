@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: vsphere-wld
+  name: tkg-vsphere-wld
   namespace: default
 stringData:
   password: VMware1!
@@ -14,8 +14,8 @@ metadata:
     osInfo: ubuntu,20.04,amd64
     tkg/plan: dev
   labels:
-    tkg.tanzu.vmware.com/cluster-name: vsphere-wld
-  name: vsphere-wld
+    tkg.tanzu.vmware.com/cluster-name: tkg-vsphere-wld
+  name: tkg-vsphere-wld
   namespace: default
 spec:
   clusterNetwork:
