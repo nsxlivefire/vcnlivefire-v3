@@ -3,9 +3,25 @@
     "rules": [
     {
       "resource_type": "Rule",
+      "id":"allow-icmp",
+      "display_name": "Allow ICMP",
+      "sequence_number":1,
+      "source_groups": [
+        "ANY"
+      ],
+      "destination_groups": [
+        "ANY"
+      ],
+      "services": [
+          "/infra/services/ICMPv4-ALL"
+      ],
+      "action" : "ALLOW"
+    },
+    {
+      "resource_type": "Rule",
       "id":"allow-dns",
       "display_name": "Allow DNS",
-      "sequence_number":1,
+      "sequence_number":2,
       "source_groups": [
         "ANY"
       ],

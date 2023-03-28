@@ -50,8 +50,8 @@
               {
                 "resource_type":"Rule",
 		"id":"https-access",
-                "display_name":"HTTPS Access",
-                "sequence_number":10,
+                "display_name":"Allow HTTPS",
+                "sequence_number":20,
                 "source_groups":[
                   "ANY"
                 ],
@@ -66,8 +66,8 @@
               {
                 "resource_type":"Rule",
 	        "id":"mysql-access",
-                "display_name":"MySQL Access",
-                "sequence_number":20,
+                "display_name":"Allow MySQL",
+                "sequence_number":30,
                 "source_groups":[
                   "/orgs/default/projects/project-prd/infra/domains/default/groups/web"
                 ],
