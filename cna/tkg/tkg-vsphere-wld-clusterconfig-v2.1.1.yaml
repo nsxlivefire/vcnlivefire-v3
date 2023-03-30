@@ -7,6 +7,8 @@ CLUSTER_PLAN: dev
 ENABLE_AUDIT_LOGGING: "false"
 ENABLE_CEIP_PARTICIPATION: "false"
 ENABLE_MHC: "false"
+ENABLE_MHC_CONTROL_PLANE: "false"
+ENABLE_MHC_WORKER_NODE: "false"
 SERVICE_CIDR: 100.64.0.0/13
 TKG_HTTP_PROXY_ENABLED: "false"
 CONTROL_PLANE_MACHINE_COUNT: "1"
@@ -29,8 +31,6 @@ VSPHERE_WORKER_DISK_GIB: "40"
 VSPHERE_WORKER_MEM_MIB: "8192"
 VSPHERE_WORKER_NUM_CPUS: "2"
 WORKER_MACHINE_COUNT: "2"
-ENABLE_MHC_CONTROL_PLANE: false
-ENABLE_MHC_WORKER_NODE: false
 
 #! ---------------------------------------------------------------------
 #! NSX specific configuration for enabling NSX routable pods
