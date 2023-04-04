@@ -1,0 +1,37 @@
+#!/bin/bash
+###############################
+# Script to validate no access to victims
+###############################
+echo "Validation Access to victims"
+echo ""
+sleep 1
+echo "Victim1 Linux-VDI (172.16.70.12) "
+echo "========================="
+echo "ping 172.16.70.12"
+ping 172.16.70.12 -c 1 -W 0.1 | head -5 | tail -1
+echo ""
+echo "      ===> NO ACCESS to Victim1 VDI <==="
+echo ""
+echo ""
+sleep 3
+echo "Victim2 Web Server (172.16.10.11)"
+echo "==================================================="
+echo "ping 172.16.10.11"
+ping 172.16.10.11 -c 1 -W 0.1 | head -5 | tail -1
+sleep 1
+echo ""
+echo "       ===> NO ACCESS ICMP to Victim2 Web Server <==="
+sleep 3
+echo ""
+echo "curl http://172.16.10.11:8080"
+curl http://172.16.10.11:8080 -m 1
+sleep 1
+echo ""
+echo "       ===> NO ACCESS HTTP port 8080 to Victim2 Web Server <==="
+sleep 3
+echo ""
+echo "curl -k https://172.16.10.11/test.php"
+curl -k https://172.16.10.11/test.php -m 1
+sleep 1
+echo ""
+echo "Fin Validation Access"

