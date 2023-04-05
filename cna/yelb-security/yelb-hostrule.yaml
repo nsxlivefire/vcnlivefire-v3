@@ -1,0 +1,13 @@
+apiVersion: ako.vmware.com/v1alpha1
+kind: HostRule
+metadata:
+  name: yelb-hostrule
+spec:
+  virtualhost:
+    fqdn: yelb.tkg.corp.local
+    enableVirtualHost: true
+    tls:
+      sslKeyCertificate:
+        name: "tkg.corp.local"
+        type: ref
+      termination: edge

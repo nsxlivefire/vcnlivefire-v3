@@ -1,13 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: yelb-https-ingress
+  name: yelb-ingress
 spec:
   ingressClassName: avi-lb # required, make sure the ingress class is not None
-  tls:
-  - hosts:
-    - yelb.tkg.corp.local
-    secretName: tkg-tls
   rules:
   - host: yelb.tkg.corp.local
     http:
