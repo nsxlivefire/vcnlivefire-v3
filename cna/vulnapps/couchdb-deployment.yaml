@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vulnapps-prd
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: couchdb-deployment
+  namespace: vulnapps-prd
+spec:
+  selector:
+    matchLabels:
+      app: couchdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: couchdb
+    spec:
+      containers:
+      - name: couchdb
+        image: registry.lab.livefire.dev/vcnlivefire/vulnapps/couchdb
+        env:
+        - name: COUCHDB_USER
+          value: admin
+        - name: COUCHDB_PASSWORD
+          value: VMware1!
+        ports:
+        - containerPort: 5984
+      nodeSelector:
+        kubernetes.io/hostname: k8s-dev-node-02
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: couchdb
+  namespace: vulnapps-prd
+spec:
+  type: ClusterIP
+  selector:
+    app: couchdb
+  ports:
+  - name: couchdb
+    port: 5984
+    targetPort: 5984
+

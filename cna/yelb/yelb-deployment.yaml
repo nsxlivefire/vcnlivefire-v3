@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yelb-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels: 
+      app: yelb-ui
+      tier: frontend    
+  template:
+    metadata:
+      labels:
+        app: yelb-ui
+        tier: frontend
+    spec:
+      containers:
+      - name: yelb-ui
+        image: registry.lab.livefire.dev/vcnlivefire/yelb/yelb-ui:0.7
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: redis-server
+      tier: cache
+  template:
+    metadata:
+      labels:
+        app: redis-server
+        tier: cache
+    spec:
+      containers:
+      - name: redis-server
+        image: registry.lab.livefire.dev/vcnlivefire/yelb/redis:4.0.2
+        ports:
+        - containerPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yelb-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: yelb-db
+      tier: backenddb
+  template:
+    metadata:
+      labels:
+        app: yelb-db
+        tier: backenddb
+    spec:
+      containers:
+      - name: yelb-db
+        image: registry.lab.livefire.dev/vcnlivefire/yelb/yelb-db:0.5
+        ports:
+        - containerPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yelb-appserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: yelb-appserver
+      tier: middletier
+  template:
+    metadata:
+      labels:
+        app: yelb-appserver
+        tier: middletier
+    spec:
+      containers:
+      - name: yelb-appserver
+        image: registry.lab.livefire.dev/vcnlivefire/yelb/yelb-appserver:0.5
+        ports:
+        - containerPort: 4567
