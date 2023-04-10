@@ -30,7 +30,7 @@ spec:
         ports:
         - containerPort: 5984
       nodeSelector:
-        kubernetes.io/hostname: k8s-dev-node-02
+        kubernetes.io/hostname: tkg-vsphere-wld-md-0-wftfb-6467897f89-v94vt
 
 ---
 apiVersion: v1
