@@ -32,7 +32,7 @@
               "id": "Infra_Management_Policy",
               "resource_type": "SecurityPolicy",
               "display_name": "Infra_Management_Policy",
-		  "category": "Emergency",
+	      "category": "Emergency",
               "rules": [
                 {
                   "resource_type": "Rule",
@@ -51,7 +51,8 @@
                     "/orgs/default/projects/project-dev/infra/domains/default/groups/default",
                     "/orgs/default/projects/project-prd/infra/domains/default/groups/default"
                   ],
-                  "action": "ALLOW"
+                  "action": "ALLOW",
+		  "logged": "True"
                 }
               ]
             }

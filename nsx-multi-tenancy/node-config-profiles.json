@@ -1,0 +1,12 @@
+{
+   "syslog": {
+      "exporters": [
+        {
+          "server": "log-01a.corp.local",
+          "port": 514,
+          "max_log_level": "INFO",
+          "protocol": "LI"
+        }
+      ]
+    }  
+}
