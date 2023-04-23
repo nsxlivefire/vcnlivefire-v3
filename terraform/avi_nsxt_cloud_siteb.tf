@@ -26,11 +26,6 @@ data "nsxt_policy_tier0_gateway" "t0-gateway" {
 resource "nsxt_policy_tier1_gateway" "nsxt_cloud_lr1" {
     provider = nsxt.lm-site-b
     display_name              = "t1-internal"
-#    edge_cluster_path         = data.nsxt_policy_edge_cluster.edge-cluster-02.path
-#    failover_mode             = "NON_PREEMPTIVE"
-#    default_rule_logging      = "false"
-#    enable_firewall           = "true"
-#    enable_standby_relocation = "false"
     tier0_path                = data.nsxt_policy_tier0_gateway.t0-gateway.path
     route_advertisement_types = ["TIER1_LB_VIP", "TIER1_CONNECTED"]
 
@@ -69,10 +64,8 @@ resource "nsxt_policy_segment" "ov-lb-vip" {
 }
 
 # Creating the content library in vCenter
-resource "vsphere_content_library" "content_library" {
+data "vsphere_content_library" "content_library" {
   name            = var.content_library_name
-  storage_backing = [data.vsphere_datastore.datastore.id]
-  description     = "Content library for AVI"
 }
 
 # Credential used to authenticate to NSX-T and vCenter
@@ -128,7 +121,7 @@ resource "avi_vcenterserver" "vcenter_server" {
     cloud_ref = avi_cloud.nsxt_cloud.id
     vcenter_url = var.vcenter_server
     content_lib {
-      id = vsphere_content_library.content_library.id
+      id = data.vsphere_content_library.content_library.id
     }
     vcenter_credentials_ref = data.avi_cloudconnectoruser.vcsa_cred.uuid
 }
@@ -146,7 +139,6 @@ resource "avi_serviceenginegroup" "cmp-se-group" {
 	name			= "Default-Group"
 	cloud_ref		= avi_cloud.nsxt_cloud.id
 	tenant_ref		= var.tenant
-#	se_name_prefix		= "cmp"
 	max_se			= 4
 	buffer_se		= 0
 	se_deprovision_delay	= 1
