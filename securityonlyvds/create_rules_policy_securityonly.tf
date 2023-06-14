@@ -16,6 +16,20 @@ provider "nsxt" {
   allow_unverified_ssl  = true
 }
 
+data "nsxt_policy_group" "drupal-vm" {
+  display_name = "drupal-vm"
+
+}
+data "nsxt_policy_group" "mariadb-vm" {
+  display_name = "mariadb-vm"
+
+}
+
+data "nsxt_policy_group" "legacy-dvpg-group" {
+  display_name = "legacy-dvpg-group"
+
+}
+
 # NSX Services
 data "nsxt_policy_service" "HTTPS" {
   display_name = "HTTPS"
@@ -48,17 +62,17 @@ resource "nsxt_policy_security_policy" "security-vds" {
     action             = "ALLOW"
     services           = [data.nsxt_policy_service.HTTP.path]
     logged             = false
-    destination_groups = [nsxt_policy_group.drupal-vm.path]
-    scope              = [nsxt_policy_group.drupal-vm.path]
+    destination_groups = [data.nsxt_policy_group.drupal-vm.path]
+    scope              = [data.nsxt_policy_group.drupal-vm.path]
   }
 
   rule {
     display_name       = "drupal-mariadb-mysql"
     action             = "ALLOW"
-    source_groups      = [nsxt_policy_group.drupal-vm.path]
-    destination_groups = [nsxt_policy_group.mariadb-vm.path]
+    source_groups      = [data.nsxt_policy_group.drupal-vm.path]
+    destination_groups = [data.nsxt_policy_group.mariadb-vm.path]
     logged             = false
-    scope              = [nsxt_policy_group.drupal-vm.path, nsxt_policy_group.mariadb-vm.path]
+    scope              = [data.nsxt_policy_group.drupal-vm.path, data.nsxt_policy_group.mariadb-vm.path]
   }
 
   rule {
@@ -66,14 +80,14 @@ resource "nsxt_policy_security_policy" "security-vds" {
     action             = "REJECT"
     services           = [data.nsxt_policy_service.ICMPv4-ALL.path]
     logged             = false
-    destination_groups = [nsxt_policy_group.legacy-dvpg-group.path]
-    scope              = [nsxt_policy_group.legacy-dvpg-group.path]
+    destination_groups = [data.nsxt_policy_group.legacy-dvpg-group.path]
+    scope              = [data.nsxt_policy_group.legacy-dvpg-group.path]
   }
 
   rule {
     display_name       = "deny-any"
     action             = "DROP"
     logged             = false
-    scope              = [nsxt_policy_group.legacy-dvpg-group.path]
+    scope              = [data.nsxt_policy_group.legacy-dvpg-group.path]
   }
 }
